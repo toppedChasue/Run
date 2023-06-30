@@ -19,5 +19,27 @@ public class CameraOffset : MonoBehaviour
     void Update()
     {
         transform.position = targetPos.position + offset;
+        TransparentObject();
+    }
+
+    void TransparentObject()
+    {
+        Vector3 dir = Player.Instance.transform.position - transform.position;
+        Vector3 direction = dir.normalized;
+        Debug.DrawRay(transform.position, Player.Instance.transform.position - transform.position, Color.blue);
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, direction, dir.magnitude, 1 << LayerMask.NameToLayer("EnvironmentObject"));
+
+       
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            TransparentObject[] obj = hits[i].transform.GetComponentsInChildren<TransparentObject>();
+            Debug.Log(obj[i].name);
+
+            for (int j = 0; j < obj.Length; j++)
+            {
+                obj[j]?.BecomeTransparent();
+            }
+        }
     }
 }
